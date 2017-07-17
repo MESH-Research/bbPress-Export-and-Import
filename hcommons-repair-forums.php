@@ -99,7 +99,7 @@ function hc_repair_forums_import() {
 			$header = NULL;
 			$data = array();
 
-			while ( ( $row = fgetcsv( $posts_csv ) ) !== FALSE ) {
+			while ( ( $row = fgetcsv( $posts_csv, 0, ';' ) ) !== FALSE ) {
 				if( ! $header )
 					$header = $row;
 				else
