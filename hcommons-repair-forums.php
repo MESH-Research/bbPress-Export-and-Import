@@ -280,4 +280,7 @@ function hc_repair_posts_import( $forum_id, $csv_array ) {
 	// Recount forum topic / reply counts
 	bbp_admin_repair_forum_topic_count();
 	bbp_admin_repair_forum_reply_count();
+
+	bbp_admin_repair_freshness();
+	bbp_admin_repair_forum_meta();
 }
