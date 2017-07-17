@@ -164,9 +164,13 @@ function hc_repair_forums_import() {
 
 				$import_posts( $old_forum_id, $new_forum_id );
 
-				echo "updating groupmeta... ";
+				echo "updating group meta... ";
 
 				groups_update_groupmeta( $group_id, 'forum_id', $new_forum_id );
+
+				echo "updating forum meta... ";
+
+				bbp_update_forum_group_ids( $new_forum_id, [ $group_id ] );
 
 				echo "finished\n";
 			} else {
