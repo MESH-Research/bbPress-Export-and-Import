@@ -92,8 +92,8 @@ function hc_repair_forums_export() {
  */
 function hc_repair_forums_import() {
 	// basically a copy of BBP_Forum_Import::csv_to_array, adjusted to feed hc_repair_posts_import()
-	$import_posts = function( $forum_id ) {
-		if ( ( $posts_csv = fopen( "forum_{$forum_id}_posts.csv", 'r' ) ) !== FALSE ) {
+	$import_posts = function() use ( $old_forum_id, $new_forum_id ) {
+		if ( ( $posts_csv = fopen( "forum_{$old_forum_id}_posts.csv", 'r' ) ) !== FALSE ) {
 			echo "importing posts... ";
 
 			$header = NULL;
@@ -108,7 +108,7 @@ function hc_repair_forums_import() {
 
 			fclose( $posts_csv );
 
-			hc_repair_posts_import( $forum_id, $data );
+			hc_repair_posts_import( $new_forum_id, $data );
 		} else {
 			echo "no posts to import. ";
 		}
@@ -117,10 +117,10 @@ function hc_repair_forums_import() {
 	if ( ( $forums_csv = fopen( 'group_forums.csv', 'r' ) ) !== FALSE ) {
 		while ( ( $data = fgetcsv( $forums_csv ) ) !== FALSE ) {
 			$group_id = $data[0];
-			$forum_id = $data[1];
+			$old_forum_id = $data[1];
 
 			if ( ! $group_id ) {
-				echo "skipping - no group id for forum $forum_id\n";
+				echo "skipping - no group id for forum $old_forum_id\n";
 				continue;
 			}
 
@@ -133,16 +133,16 @@ function hc_repair_forums_import() {
 
 			$meta_forum_ids = groups_get_groupmeta( $g->id, 'forum_id' );
 
-			if ( isset( $meta_forum_ids[0] ) && $forum_id != $meta_forum_ids[0] ) {
-				echo "skipping - source forum $forum_id does not match existing forum ${meta_forum_ids[0]} for group '{$g->name}'\n";
+			if ( isset( $meta_forum_ids[0] ) && $old_forum_id != $meta_forum_ids[0] ) {
+				echo "skipping - source forum $old_forum_id does not match existing forum ${meta_forum_ids[0]} for group '{$g->name}'\n";
 				continue;
 			}
 
-			$forum = bbp_get_forum( $forum_id );
+			$forum = bbp_get_forum( $old_forum_id );
 
 			// forum does not exist, create it and import its topics & replies.
 			if ( ! $forum ) {
-				echo "importing forum $forum_id for group '{$g->name}'... ";
+				echo "importing forum $old_forum_id for group '{$g->name}'... ";
 
 				$forum_data = [
 					'post_parent' => $data[2],
@@ -160,7 +160,7 @@ function hc_repair_forums_import() {
 
 				echo "new forum $new_forum_id created... ";
 
-				$import_posts( $new_forum_id );
+				$import_posts();
 
 				echo "finished\n";
 			} else {
