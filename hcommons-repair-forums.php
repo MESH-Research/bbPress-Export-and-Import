@@ -164,6 +164,10 @@ function hc_repair_forums_import() {
 
 				$import_posts( $old_forum_id, $new_forum_id );
 
+				echo "updating groupmeta... ";
+
+				groups_update_groupmeta( $group_id, 'forum_id', $new_forum_id );
+
 				echo "finished\n";
 			} else {
 				echo "skipping existing forum for group '{$g->name}'\n";
