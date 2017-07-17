@@ -92,14 +92,14 @@ function hc_repair_forums_export() {
  */
 function hc_repair_forums_import() {
 	// basically a copy of BBP_Forum_Import::csv_to_array, adjusted to feed hc_repair_posts_import()
-	$import_posts = function() use ( $old_forum_id, $new_forum_id ) {
+	$import_posts = function( $old_forum_id, $new_forum_id ) {
 		if ( ( $posts_csv = fopen( "forum_{$old_forum_id}_posts.csv", 'r' ) ) !== FALSE ) {
 			echo "importing posts... ";
 
 			$header = NULL;
 			$data = array();
 
-			while ( ( $data = fgetcsv( $posts_csv ) ) !== FALSE ) {
+			while ( ( $row = fgetcsv( $posts_csv ) ) !== FALSE ) {
 				if( ! $header )
 					$header = $row;
 				else
@@ -160,7 +160,7 @@ function hc_repair_forums_import() {
 
 				echo "new forum $new_forum_id created... ";
 
-				$import_posts();
+				$import_posts( $old_forum_id, $new_forum_id );
 
 				echo "finished\n";
 			} else {
