@@ -18,6 +18,8 @@ const DESTINATION_DOMAIN = 'mla.chaucer.mlacommons.org';
 // we only need the BBP_Forum_Export class from the plugin
 require_once( './includes/export.php' );
 
+// bbpress functions we need to repair relationships are in here
+require_once( '../bbpress/includes/admin/tools.php' );
 
 if ( isset( $args[0] ) && 'export' == $args[0] ) {
 	hc_repair_forums_export();
