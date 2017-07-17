@@ -90,6 +90,10 @@ class BBP_Forum_Import {
 
 				$user = get_user_by( 'email', $post_args['post_author'] );
 
+				if ( ! $user ) {
+					$user = get_user_by( 'login', $post_args['user_login'] );
+				}
+
 				if( ! $user ) {
 					// The user doesn't exist, so create them
 					$user = wp_insert_user( array(
