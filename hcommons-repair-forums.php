@@ -264,7 +264,7 @@ function hc_repair_posts_import( $forum_id, $csv_array ) {
 				bbp_add_user_favorite( $post_args['post_author'], $topic_id );
 
 			// Check if the next row is a topic, meaning we have reached the last reply and need to update the last active time
-			if( is_array( $csv_array[ $key + 1] ) && $csv_array[ $key + 1 ]['post_type'] == bbp_get_topic_post_type() )
+			if( isset( $csv_array[ $key + 1 ] ) && $csv_array[ $key + 1 ]['post_type'] == bbp_get_topic_post_type() )
 				bbp_update_forum_last_active_time( $forum_id, $post_args['post_date'] );
 
 			break;
